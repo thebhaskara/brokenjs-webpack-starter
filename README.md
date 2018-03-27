@@ -20,9 +20,9 @@ cd ..
 ```
 
 step 3:
-run the following commands when `webpack` and `webpack-dev-server` commands don't work on cli
+run the following commands when `webpack`, `webpack-dev-server` and `gulp` commands don't work on cli
 ```
-npm install -g webpack webpack-dev-server
+npm install -g webpack webpack-dev-server gulp
 ```
 
 ## Development
