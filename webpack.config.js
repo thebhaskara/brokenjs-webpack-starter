@@ -38,9 +38,11 @@ module.exports = {
     },
     resolve: {
         alias: {
-            broken: path.join(__dirname, 'modules/brokenjs/src'),
+            broken: path.join(__dirname, 'node_modules/brokenjs/src'),
             components: path.join(__dirname, 'modules/components'),
             pages: path.join(__dirname, 'modules/pages'),
+            utilities: path.join(__dirname, 'modules/utilities'),
+            // '@material': path.join(__dirname, 'node_modules/@material'),
         }
     },
     devServer: {
@@ -55,6 +57,22 @@ module.exports = {
                 loader: "raw-loader" // loads raw text
             }, {
                 loader: "less-loader" // compiles Less to CSS
+            }]
+        }, {
+            test: /\.scss$/,
+            use: [{
+                loader: "raw-loader" // loads raw text
+            }, {
+                loader: "sass-loader", // compiles Less to CSS,
+                options: {
+                    includePaths: ['./modules', './node_modules'],
+                    // functions: {
+                    //     '@debug': function (warning) {
+                    //         console.log(warning.getValue());
+                    //         return ' ';
+                    //     }
+                    // }
+                }
             }]
         }, {
             test: /\.html$/,
