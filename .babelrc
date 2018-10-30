@@ -1,0 +1,6 @@
+{
+  "plugins": [
+  	"@babel/plugin-syntax-dynamic-import",
+  	"transform-async-to-generator"
+	]
+}

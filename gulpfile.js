@@ -74,12 +74,12 @@ gulp.task('add', function () {
     var dest;
     if (argv.component) dest = 'components';
     else if (argv.control) dest = 'controls';
-    else if (argv.bpage) dest = 'pages';
+    else if (argv.page) dest = 'pages';
     else if (argv.utility) dest = 'utilities';
     else if (argv.binder) dest = 'binders';
     else throw "specify --component or --control or --page or --utility or --binder";
 
-    var name = argv.component || argv.control || argv.bpage || argv.utility || argv.binder;
+    var name = argv.component || argv.control || argv.page || argv.utility || argv.binder;
     name = _.kebabCase(name);
     if (!_.isString(name)) throw "specify name";
 

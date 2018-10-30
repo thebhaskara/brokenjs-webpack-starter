@@ -9,11 +9,13 @@ module.exports = {
     entry: {
         common: './modules/common.js',
         app: './modules/app.js',
+        // LandingPage: () => './modules/pages/landing-page/index.js',
     },
     output: {
         // output folder path
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].bundle.js',
+        chunkFilename: '[name].bundle.js',
     },
     plugins: [
         new CleanWebpackPlugin(['dist']),
@@ -21,8 +23,8 @@ module.exports = {
             title: "My App",
             template: "./index.html"
         }),
-        // new webpack.optimize.CommonsChunkPlugin({})
-        // new UglifyJSPlugin(),
+        // new webpack.optimize.CommonsChunkPlugin({}),
+        new UglifyJSPlugin(),
     ],
     optimization: {
         // minimize: false,
@@ -85,5 +87,5 @@ module.exports = {
             loader: "babel-loader"
         }]
     },
-    mode: "development"
+    mode: "development",
 }
