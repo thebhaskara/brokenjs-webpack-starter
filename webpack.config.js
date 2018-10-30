@@ -9,7 +9,6 @@ module.exports = {
     entry: {
         common: './modules/common.js',
         app: './modules/app.js',
-        // LandingPage: () => './modules/pages/landing-page/index.js',
     },
     output: {
         // output folder path
@@ -24,10 +23,9 @@ module.exports = {
             template: "./index.html"
         }),
         // new webpack.optimize.CommonsChunkPlugin({}),
-        new UglifyJSPlugin(),
+        // new UglifyJSPlugin(),
     ],
     optimization: {
-        // minimize: false,
         splitChunks: {
             cacheGroups: {
                 commons: {
@@ -40,11 +38,10 @@ module.exports = {
     },
     resolve: {
         alias: {
-            broken: path.join(__dirname, 'node_modules/brokenjs/src'),
+            broken: path.join(__dirname, 'modules/brokenjs/src'),
             components: path.join(__dirname, 'modules/components'),
             pages: path.join(__dirname, 'modules/pages'),
             utilities: path.join(__dirname, 'modules/utilities'),
-            // '@material': path.join(__dirname, 'node_modules/@material'),
         }
     },
     devServer: {
@@ -68,12 +65,6 @@ module.exports = {
                 loader: "sass-loader", // compiles Less to CSS,
                 options: {
                     includePaths: ['./modules', './node_modules'],
-                    // functions: {
-                    //     '@debug': function (warning) {
-                    //         console.log(warning.getValue());
-                    //         return ' ';
-                    //     }
-                    // }
                 }
             }]
         }, {
@@ -84,7 +75,14 @@ module.exports = {
         }, {
             test: /\.js$/,
             exclude: /node_modules/,
-            loader: "babel-loader"
+            loader: "babel-loader",
+            options: {
+                presets: ['@babel/preset-env'],
+                plugins: [
+                    "@babel/plugin-transform-async-to-generator",
+                    "@babel/plugin-syntax-dynamic-import",
+                ]
+            }
         }]
     },
     mode: "development",
