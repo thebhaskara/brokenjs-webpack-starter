@@ -70,7 +70,7 @@ var replaceName = function (name, content) {
     return content;
 }
 
-gulp.task('add', function () {
+gulp.task('add', function (cb) {
     var dest;
     if (argv.component) dest = 'components';
     else if (argv.control) dest = 'controls';
@@ -95,9 +95,9 @@ gulp.task('add', function () {
         fs.writeFileSync(path, content);
 
     } else if (argv.binder) {
-        
+
         var content = replaceName(name, jsBinderFileContent);
-        
+
         var path = ['modules', dest, name].join('/') + '.js';
         fs.writeFileSync(path, content);
 
@@ -126,5 +126,6 @@ gulp.task('add', function () {
 
     }
 
-    console.log(["Successfully made", dest, dir, "enjoy!"]. join(' '));
+    console.log(["Successfully made", dest, dir, "enjoy!"].join(' '));
+    cb();
 })
