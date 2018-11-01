@@ -1,0 +1,13 @@
+import Broken from "broken";
+
+import --upper-name from "./--name";
+/** place for imports **/
+
+import css from "./--name.scss";
+import html from "./--name.html";
+
+export default Broken.ViewModel.make({
+    name: "--name",
+    html: html,
+    css: css,
+}, --upper-name/** place for insert **/);

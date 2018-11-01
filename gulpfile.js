@@ -8,65 +8,31 @@ var _ = require('lodash');
 // gulp add --page pageName
 // gulp add --utility utilityName
 
-var jsFileContent = `
-import Broken from "broken";
-import _ from "lodash";
+const componentFileContent = fs.readFileSync('./gulp-add/component-file.js.txt').toString();
+const componentIndexFileContent = fs.readFileSync('./gulp-add/component-index-file.js.txt').toString();
+const utilityFileContent = fs.readFileSync('./gulp-add/utility-file.js.txt').toString();
+const binderFileContent = fs.readFileSync('./gulp-add/binder-file.js.txt').toString();
+const indexImportFileContent = fs.readFileSync('./gulp-add/index-import-file.js.txt').toString();
+const indexImportExportFileContent = fs.readFileSync('./gulp-add/index-import-export-file.js.txt').toString();
+const importComment = '/** place for imports **/';
+const exportComment = '/** place for exports **/';
+const insertComment = '/** place for insert **/';
 
-import css from "./--name.scss";
-import html from "./--name.html";
-
-var --upper-name = function() {
-    
-}
-
---upper-name.prototype = {
-    name: "--name",
-    html: html,
-    css: css,
-    initWatches: {}
-}
-
-export default Broken.ViewModel.make(--upper-name);
-`;
-
-var jsIndexFileContent = `
-import --upper-name from "./--name";
-export default --upper-name;
-`;
-
-var jsUtilityFileContent = `
-import Broken from "broken";
-import _ from "lodash";
-
-var --upper-name = function() {
-    
-}
-
---upper-name.prototype = {
-
-}
-
-export default --upper-name;
-`;
-
-var jsBinderFileContent = `
-import Broken from "broken";
-import _ from "lodash";
-
-Broken.ViewModel.addBinder('--name', function (element, propertyName) {
-
-});
-
-export default Broken;
-`;
-
-var replaceAll = function (str, search, replace) {
+const replaceAll = function (str, search, replace) {
     return str.replace(new RegExp(search, 'g'), replace);
 }
 
-var replaceName = function (name, content) {
+const kebabCase = function (name) {
+    return _.kebabCase(name)
+}
+
+const upperCamelCase = function (name) {
+    return _.upperFirst(_.camelCase(name));
+}
+
+const replaceName = function (name, content) {
     content = replaceAll(content, '--name', name);
-    content = replaceAll(content, '--upper-name', _.upperFirst(_.camelCase(name)))
+    content = replaceAll(content, '--upper-name', upperCamelCase(name));
     return content;
 }
 
@@ -80,52 +46,82 @@ gulp.task('add', function (cb) {
     else throw "specify --component or --control or --page or --utility or --binder";
 
     var name = argv.component || argv.control || argv.page || argv.utility || argv.binder;
-    name = _.kebabCase(name);
+    name = kebabCase(name);
     if (!_.isString(name)) throw "specify name";
 
     if (!fs.existsSync('modules/' + dest)) {
         fs.mkdirSync('modules/' + dest);
     }
 
+    var destDir = ['modules', dest].join('/');
+    var dir = ['modules', dest, name].join('/');
+
     if (argv.utility) {
 
-        var content = replaceName(name, jsUtilityFileContent);
+        var content = replaceName(name, utilityFileContent);
+        fs.writeFileSync(dir + '.js', content);
 
-        var path = ['modules', dest, name].join('/') + '.js';
-        fs.writeFileSync(path, content);
+        var indexPath = [destDir, 'index.js'].join('/');
+        if (!fs.existsSync(indexPath)) {
+            fs.writeFileSync(indexPath, indexImportExportFileContent);
+        }
+
+        var indexContent = fs.readFileSync(indexPath).toString();
+        indexContent = indexContent.replace(importComment, `${importComment}
+import ${upperCamelCase(name)} from './${name}'`);
+        indexContent = indexContent.replace(exportComment, `${exportComment}
+    ${upperCamelCase(name)},`);
+        fs.writeFileSync(indexPath, indexContent);
 
     } else if (argv.binder) {
 
-        var content = replaceName(name, jsBinderFileContent);
+        var content = replaceName(name, binderFileContent);
+        fs.writeFileSync(dir + '.js', content);
 
-        var path = ['modules', dest, name].join('/') + '.js';
-        fs.writeFileSync(path, content);
+        var indexPath = [destDir, 'index.js'].join('/');
+        if (!fs.existsSync(indexPath)) {
+            fs.writeFileSync(indexPath, indexImportFileContent);
+        }
+
+        var indexContent = fs.readFileSync(indexPath).toString();
+        indexContent = indexContent.replace(importComment, `${importComment}
+import './${name}'`);
+        fs.writeFileSync(indexPath, indexContent);
 
     } else {
 
-        var dir = ['modules', dest, name].join('/');
+        var componentName = argv.sub || name;
+        componentName = kebabCase(componentName);
+
+        var path = [dir, componentName].join('/')
 
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
+            let content = replaceName(componentName, componentIndexFileContent);
+            fs.writeFileSync([dir, 'index.js'].join('/'), content);
         }
-        var subComponentName = argv.sub || name;
-        subComponentName = _.kebabCase(subComponentName);
 
-        var path = [dir, subComponentName].join('/')
-
-        fs.writeFileSync(path + '.scss', '.view-name {}');
-        fs.writeFileSync(path + '.html', '<div></div>');
-
-        var content = replaceName(subComponentName, jsFileContent);
+        var content = replaceName(componentName, componentFileContent);
         fs.writeFileSync(path + '.js', content);
 
-        if (name == subComponentName) {
-            var indexFileContent = replaceName(subComponentName, jsIndexFileContent);
-            fs.writeFileSync([dir, 'index'].join('/') + '.js', indexFileContent);
+        if (name == componentName) {
+
+            fs.writeFileSync(path + '.scss', '.view-name {}');
+            fs.writeFileSync(path + '.html', '<div></div>');
+        } else {
+            let indexPath = [dir, 'index.js'].join('/');
+            let indexContent = fs.readFileSync(indexPath).toString();
+
+            indexContent = indexContent.replace(importComment, `${importComment}
+import ${upperCamelCase(componentName)} from './${componentName}'`);
+            indexContent = indexContent.replace(insertComment, `, ${upperCamelCase(componentName)}${insertComment}`);
+
+            fs.writeFileSync(indexPath, indexContent);
         }
 
     }
 
     console.log(["Successfully made", dest, dir, "enjoy!"].join(' '));
+
     cb();
 })

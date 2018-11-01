@@ -1,0 +1,12 @@
+import Broken from "broken";
+import _ from "lodash";
+
+var --upper-name = function() {
+    
+}
+
+--upper-name.prototype = {
+
+}
+
+export default --upper-name;

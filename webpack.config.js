@@ -14,7 +14,7 @@ module.exports = {
         // output folder path
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].bundle.js',
-        chunkFilename: '[name].bundle.js',
+        chunkFilename: '[name].chunk.bundle.js',
     },
     plugins: [
         new CleanWebpackPlugin(['dist']),
