@@ -1,41 +1,20 @@
-
-import Broken from "broken";
 import _ from "lodash";
 
-import css from "./header.scss";
-import html from "./header.html";
+import { Data } from '../../utilities';
 
-import { MDCTabBar } from '@material/tab-bar';
+var Header = {
+    initialize_Header: function () {
 
-var Header = function () {
-    this.watch('events.tabClick.favorites', () => {
-        console.log('events.tabClick.favorites');
-    })
-    this.watch('events.tabClick.favorites1', () => {
-        console.log('events.tabClick.favorites1');
-    })
-    this.watch('events.tabClick.favorites2', () => {
-        console.log('events.tabClick.favorites2');
-    })
-}
-
-Header.prototype = {
-    name: "header",
-    html: html,
-    css: css,
-    initWatches: {
-        tabBarElement: function (tabBarElement) {
-            setTimeout(() => {
-                this.tabBar = new MDCTabBar(tabBarElement);
-                // tabBarElement.addEventListener("MDCTabBar:activated", function (data) {
-                //     console.log("MDCTabBar:activated", data);
-                // });
-            }, 300);
-        }
     },
-    initialize_title: function () {
-        this.set('title', 'new title');
-    }
+    initWatches: [{
+        "_internal.render": function () {
+            this.setHeaderHeight()
+        }
+    }],
+    setHeaderHeight: ['headerElement', 'containerElement', function (headerElement, containerElement) {
+        let height = headerElement.clientHeight;
+        containerElement.style.height = height + 'px';
+    }],
 }
 
-export default Broken.ViewModel.make(Header);
+export default Header;

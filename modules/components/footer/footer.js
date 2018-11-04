@@ -2,11 +2,11 @@ import _ from "lodash";
 
 import {  } from '../../utilities';
 
-var --upper-name = {
-    initialize_--upper-name: function() {
+var Footer = {
+    initialize_Footer: function() {
 
     },
     initWatches: [{}]
 }
 
-export default --upper-name;
+export default Footer;
