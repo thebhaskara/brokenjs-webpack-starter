@@ -1,0 +1,23 @@
+.view-name {
+    .mdc-list-item__meta {
+        margin: 0;
+    }
+    [contenteditable="true"] {
+        outline: none;
+        border-bottom: 2px solid transparent;
+        &:focus {
+            border-bottom: 2px solid var(--mdc-theme-primary, #6200ee);
+        }
+    }
+    .placehoder {
+        position: absolute;
+        color: #dddddd;
+        z-index: -1;
+        font-weight: 300;
+        font-style: italic;
+        font-size: 80%;
+    }
+    .hide {
+        display: none;
+    }
+}

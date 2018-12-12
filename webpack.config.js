@@ -13,8 +13,8 @@ module.exports = {
     output: {
         // output folder path
         path: path.resolve(__dirname, 'dist'),
-        filename: '[name].bundle.js',
-        chunkFilename: '[name].chunk.bundle.js',
+        filename: '[name].[contenthash].bundle.js',
+        chunkFilename: '[name].[contenthash].chunk.bundle.js',
     },
     plugins: [
         new CleanWebpackPlugin(['dist']),
@@ -23,7 +23,7 @@ module.exports = {
             template: "./index.html"
         }),
         // new webpack.optimize.CommonsChunkPlugin({}),
-        // new UglifyJSPlugin(),
+        new UglifyJSPlugin(),
     ],
     optimization: {
         splitChunks: {
@@ -32,7 +32,18 @@ module.exports = {
                     test: /[\\/]node_modules[\\/]/,
                     name: "vendors",
                     chunks: "all"
-                }
+                },
+                broken: {
+                    test(chunk) {
+                        if (chunk.resource && chunk.resource.indexOf('brokenjs\\') > -1) {
+                            console.log(chunk.resource)
+                            return true;
+                        }
+                        return false;
+                    },
+                    name: "broken",
+                    chunks: "all"
+                },
             }
         }
     },

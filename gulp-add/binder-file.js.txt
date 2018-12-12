@@ -1,6 +1,6 @@
 import Broken from "broken";
 import _ from "lodash";
-import { SomeUtil } from '../../utilities';
+import { } from '../utilities';
 
 Broken.ViewModel.addBinder('--name', function (element, propertyName) {
 

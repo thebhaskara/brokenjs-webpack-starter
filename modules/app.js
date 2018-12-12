@@ -6,6 +6,8 @@ import _ from "lodash";
 import css from "./app.scss";
 import html from "./app.html";
 
+import "./binders";
+
 // import Header from "./components/header";
 
 const App = Broken.ViewModel.create({
@@ -19,7 +21,11 @@ const App = Broken.ViewModel.create({
     setComponent: async function (compName) {
         let { default: Component } = await import(/* webpackChunkName: "components-[request]" */ `./components/${compName}/index`)
         this[compName] = App.createAndSetChild(compName, Component);
-    }
+    },
+    setControl: async function (name) {
+        let { default: Control } = await import(/* webpackChunkName: "controls-[request]" */ `./controls/${name}/index`);
+        this.createAndSetChild('name', Control);
+    },
 });
 
 // const header = App.createAndSetChild('header', Header);
