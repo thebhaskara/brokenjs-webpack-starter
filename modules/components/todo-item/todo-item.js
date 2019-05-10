@@ -2,7 +2,7 @@
 import Broken from "broken";
 import _ from "lodash";
 
-import css from "./todo-item.less";
+import css from "./todo-item.scss";
 import html from "./todo-item.html";
 
 var TodoItem = function() {

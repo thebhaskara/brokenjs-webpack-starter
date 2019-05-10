@@ -1,10 +1,11 @@
+
 import Broken from "broken";
 import _ from "lodash";
 
-import css from "./todo-page.less";
+import css from "./todo-page.scss";
 import html from "./todo-page.html";
 
-import TodoItem from "components/todo-item/todo-item";
+import TodoItem from "../../components/todo-item";
 
 var TodoPage = function() {
     this.set('items', []);
@@ -12,11 +13,10 @@ var TodoPage = function() {
 }
 
 TodoPage.prototype = {
-
     name: "todo-page",
     html: html,
     css: css,
-
+    
     initWatches: {
         'addEvent': function() {
             this.addItem();
